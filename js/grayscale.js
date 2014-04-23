@@ -22,6 +22,20 @@ $(function() {
 function setupIPInfo() {
     $(".ipinfo #address").html(ipInfo.ip);
     $(".ipinfo #location").html(ipInfo.city + " " + ipInfo.country);
+
+
+    var geo = new google.maps.Geocoder();
+    geo.geocode(
+        { 
+            address: ipInfo.city + ", " + ipInfo.country
+        },
+        function(data, status) {
+            var map = new google.maps.Map(document.getElementById('map'), myOptions);
+            if (status == google.maps.GeocoderStatus.OK) {
+                map.setCenter(data[0].geometry.location);
+            }            
+        }  
+    );
 }
 
 //Google Map Skin - Get more at http://snazzymaps.com/
@@ -140,7 +154,6 @@ var myOptions = {
     }]
 };
 
-var map = new google.maps.Map(document.getElementById('map'), myOptions);
 
 
 var ipInfo;
