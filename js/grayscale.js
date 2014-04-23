@@ -9,6 +9,7 @@ $(window).scroll(function() {
 
 //jQuery for page scrolling feature - requires jQuery Easing plugin
 $(function() {
+    myIP();
     $('.page-scroll a').bind('click', function(event) {
         var $anchor = $(this);
         $('html, body').stop().animate({
@@ -17,6 +18,11 @@ $(function() {
         event.preventDefault();
     });
 });
+
+function setupIPInfo() {
+    $(".ipinfo #address").html(ipInfo.ip);
+    $(".ipinfo #location").html(ipInfo.city + " " + ipInfo.country);
+}
 
 //Google Map Skin - Get more at http://snazzymaps.com/
 var myOptions = {
@@ -135,3 +141,36 @@ var myOptions = {
 };
 
 var map = new google.maps.Map(document.getElementById('map'), myOptions);
+
+
+var ipInfo;
+
+function myIP() {
+    if (window.XMLHttpRequest) xmlhttp = new XMLHttpRequest();
+    else xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+    $.get("http://api.hostip.info/get_html.php", function(data) {
+        var hostipInfo = data.split("\n");
+
+        var info = new Object();
+
+        for (i=0; i < hostipInfo.length; i++) {
+            ipAddress = hostipInfo[i].split(":");
+            switch (ipAddress[0]) {
+                case "Country" :
+                    info.country = ipAddress[1];
+                    break;
+                case "IP" :
+                    info.ip = ipAddress[1];
+                    break;
+                case "City" :
+                    info.city = ipAddress[1];
+                    break;
+            }
+        }
+        ipInfo = info;
+        setupIPInfo();
+    });
+
+    return false;
+}
+
