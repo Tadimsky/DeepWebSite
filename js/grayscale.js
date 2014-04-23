@@ -21,21 +21,23 @@ $(function() {
 
 function setupIPInfo() {
     $(".ipinfo #address").html(ipInfo.ip);
-    $(".ipinfo #location").html(ipInfo.city + " " + ipInfo.country);
+    $(".ipinfo #location").html(ipInfo.address);
 
-
+    map.setCenter(new google.maps.LatLng(ipInfo.lat, ipInfo.lng));
+    /*
     var geo = new google.maps.Geocoder();
     geo.geocode(
         { 
             address: ipInfo.city + ", " + ipInfo.country
         },
         function(data, status) {
-            var map = new google.maps.Map(document.getElementById('map'), myOptions);
+            
             if (status == google.maps.GeocoderStatus.OK) {
                 map.setCenter(data[0].geometry.location);
             }            
         }  
     );
+    */
 }
 
 //Google Map Skin - Get more at http://snazzymaps.com/
@@ -154,14 +156,16 @@ var myOptions = {
     }]
 };
 
-
+var map = new google.maps.Map(document.getElementById('map'), myOptions);
 
 var ipInfo;
 
 function myIP() {
     if (window.XMLHttpRequest) xmlhttp = new XMLHttpRequest();
     else xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-    $.get("http://api.hostip.info/get_html.php", function(data) {
+    $.get("http://api.hostip.info/get_json.php?position=true", function(data) {
+
+        /*
         var hostipInfo = data.split("\n");
 
         var info = new Object();
@@ -180,7 +184,15 @@ function myIP() {
                     break;
             }
         }
+
         ipInfo = info;
+        */
+       console.log(data);
+       var info = new Object();
+       info = data;
+       info.address = info.city + ", " + info.country_name;
+       
+       ipInfo = data;
         setupIPInfo();
     });
 
