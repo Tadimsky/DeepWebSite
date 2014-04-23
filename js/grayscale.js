@@ -167,7 +167,11 @@ function myIP() {
             console.log(json);
             var info = new Object();
             info = json;
-            info.address = info.isp + ", " + info.city + ", " + info.region_code + ", " + info.country;
+
+            info.address = info.city + ", " + info.region_code + ", " + info.country;
+            if (info.isp) {
+                info.address = info.isp + ", " + info.address;
+            }            
        
             ipInfo = info;
             setupIPInfo();
