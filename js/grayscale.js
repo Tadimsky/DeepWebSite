@@ -23,7 +23,7 @@ function setupIPInfo() {
     $(".ipinfo #address").html(ipInfo.ip);
     $(".ipinfo #location").html(ipInfo.address);
 
-    map.setCenter(new google.maps.LatLng(ipInfo.lat, ipInfo.lng));
+    map.setCenter(new google.maps.LatLng(ipInfo.latitude, ipInfo.longitude));
     /*
     var geo = new google.maps.Geocoder();
     geo.geocode(
@@ -161,8 +161,21 @@ var map = new google.maps.Map(document.getElementById('map'), myOptions);
 var ipInfo;
 
 function myIP() {
-    if (window.XMLHttpRequest) xmlhttp = new XMLHttpRequest();
-    else xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+
+    $.getJSON("http://www.telize.com/geoip?callback=?",
+        function(json) {
+            console.log(json);
+            var info = new Object();
+            info = json;
+            info.address = info.isp + ", " + info.city + ", " + info.region_code + ", " + info.country;
+       
+            ipInfo = info;
+            setupIPInfo();
+            
+        }
+    );
+
+    /*
     $.get("http://api.hostip.info/get_json.php?position=true", function(data) {
 
         /*
@@ -186,7 +199,7 @@ function myIP() {
         }
 
         ipInfo = info;
-        */
+        
        console.log(data);
        var info = new Object();
        info = data;
@@ -195,6 +208,7 @@ function myIP() {
        ipInfo = data;
         setupIPInfo();
     });
+*/
 
     return false;
 }
